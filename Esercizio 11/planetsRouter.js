@@ -3,7 +3,6 @@ const Joi = require('joi');
 
 const router = express.Router();
 
-// Dummy database with initial data
 let planets = [
   {
     id: 1,
@@ -15,18 +14,18 @@ let planets = [
   },
 ];
 
-// Validation schema for planet data using Joi
+
 const planetSchema = Joi.object({
   id: Joi.number().required(),
   name: Joi.string().required(),
 });
 
-// GET all planets
+
 router.get('/api/planets', (req, res) => {
   res.json(planets);
 });
 
-// GET a planet by ID
+
 router.get('/api/planets/:id', (req, res) => {
   const planetId = parseInt(req.params.id);
   const planet = planets.find((p) => p.id === planetId);
@@ -38,7 +37,7 @@ router.get('/api/planets/:id', (req, res) => {
   res.json(planet);
 });
 
-// POST a new planet
+
 router.post('/api/planets', (req, res) => {
   const { id, name } = req.body;
 
@@ -52,7 +51,7 @@ router.post('/api/planets', (req, res) => {
   res.status(201).json({ msg: 'Planet created successfully' });
 });
 
-// PUT (update) a planet by ID
+
 router.put('/api/planets/:id', (req, res) => {
   const planetId = parseInt(req.params.id);
   const { name } = req.body;
@@ -73,7 +72,7 @@ router.put('/api/planets/:id', (req, res) => {
   res.json({ msg: 'Planet updated successfully' });
 });
 
-// DELETE a planet by ID
+
 router.delete('/api/planets/:id', (req, res) => {
   const planetId = parseInt(req.params.id);
   const planetIndex = planets.findIndex((p) => p.id === planetId);
