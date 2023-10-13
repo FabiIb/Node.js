@@ -1,28 +1,27 @@
-import express from "express";
 import pgPromise from "pg-promise";
-import "dotenv/config";
+import multer from "multer";
+const upload = multer();
 import jwt from "jsonwebtoken";
-import morgan from "morgan";
-
+import dotenv from "dotenv";
+dotenv.config()
+const {SECRET}= process.env
 
 const db =pgPromise()("postgres://postgres:123456@localhost:5432/postgres")
-/* const setupDB=async()=>{
-await db.none(`DROP TABLE IF EXISTS planets;
-CREATE TABLE planets (
-   id SERIAL NOT NULL PRIMARY KEY,
-   name TEXT NOT NULL,
-  image TEXT
-)`)
-await db.none(`INSERT INTO planets (name) VALUES ('Earth')`)
-await db.none(`INSERT INTO planets (name) VALUES ('Mars')`)
-await db.none(`INSERT INTO planets (name) VALUES ('Venus')`)
 
+ const setupDB=async()=>{
+  db.any(`DROP TABLE IF EXISTS users;
+  CREATE TABLE users (
+    id SERIAL NOT NULL PRIMARY KEY,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL,
+    token TEXT
+  )` )
+  await db.none("INSERT INTO users (username, password, token) VALUES ($1, $2, $3)", ["user1", "password1", null]);
+  await db.none("INSERT INTO users (username, password, token) VALUES ($1, $2, $3)", ["user2", "password2", null]);
+
+  console.log("Tabella users creata e dati di esempio inseriti.");
 }
-setupDB(); */
-
-const app = express();
-app.use(express.json());
-app.use(morgan('dev'));
+setupDB() 
 
 const getOneById = async(req, res) => {
   const { id } = req.params;
@@ -50,6 +49,7 @@ const post = async(req, res) => {
   } catch (error) {
     console.log(error);
   }
+ 
 };
 
 const patchById = async(req, res) => {
@@ -58,6 +58,7 @@ const patchById = async(req, res) => {
   await db.none('UPDATE users SET password=$2 WHERE id=$1',[id,password])
   res.status(200).json({ msg: "ok" });
 };
+
 
 
 const deleteById = async(req, res) => {
@@ -99,12 +100,5 @@ const logout = async(req,res)=>{
    await db.none("UPDATE users SET token=$2 WHERE id=$1",[user.id,null])
    res.status(200).json({msg:"Hai effettuato il logout"})
 }
-
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
 
 export {db,login,logout,getOneById, getAll, post, patchById, deleteById };
