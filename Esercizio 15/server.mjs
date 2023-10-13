@@ -1,7 +1,7 @@
 import express from "express";
 import "dotenv/config";
 import morgan from "morgan";
-import multer from "multer";
+import multer from "multer"
 import {
   deleteById,
   getAll,
@@ -12,8 +12,8 @@ import {
   login,
   logout
 } from "./controller.mjs";
-import autorizzazione from "./permissions.mjs";
-import "./passport.mjs";
+import autorizzazione from "./autorizzazioni.mjs";
+import "./passport.mjs"
 const port = process.env.port;
 const host = process.env.host;
 const app = express();
@@ -32,4 +32,3 @@ app.delete("/users/:id", deleteById);
 
 
 app.listen(port, () => console.log(`the server running to ${host}`));
-
